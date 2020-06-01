@@ -1,51 +1,68 @@
-import React from "react";
-import { useForm } from "react-hook-form";
-import { Container } from "react-bootstrap";
+import { useForm } from 'react-hook-form';
+import { Container, Form, Button } from 'react-bootstrap';
+import { loginRequest } from '../http/login';
+import { saveUserAction } from '../redux/action';
+import { connect } from 'react-redux';
 
-type LoginForm = {
+export interface LoginFormProps {
   email: string;
   password: string;
-};
+}
 
-const LoginForm: React.FunctionComponent = () => {
-  const { register, handleSubmit, errors } = useForm<LoginForm>();
-  const onSubmit = (data: LoginForm) => {
-    console.log("data", data);
+const LoginForm: React.FunctionComponent = ({ user, saveUserAction }: any) => {
+  const { register, handleSubmit, errors } = useForm<LoginFormProps>();
+  const onSubmit = async (loginFormPayload: LoginFormProps) => {
+    const user = await loginRequest(loginFormPayload);
+    console.log('data', user);
+    saveUserAction(user);
   };
 
   return (
-    <Container className="mt-5">
+    <Container className="mt-5 login-container shadow-lg mx-auto p-lg-5 p-md-4 p-3">
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="field">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            ref={register({ required: true })}
-          />
-          {errors.email && errors.email.type === "required" && (
+          <Form.Group>
+            <Form.Control
+              type="email"
+              placeholder="Enter email"
+              name="email"
+              id="email"
+              ref={register({ required: true })}
+            />
+          </Form.Group>
+          {errors.email && errors.email.type === 'required' && (
             <div className="error">Email is required.</div>
           )}
         </div>
         <div className="field">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            ref={register({ required: true })}
-          />
-          {errors.password && errors.password.type === "required" && (
+          <Form.Group>
+            <Form.Control
+              type="password"
+              placeholder="Enter password"
+              name="password"
+              id="password"
+              ref={register({ required: true })}
+            />
+          </Form.Group>
+          {errors.password && errors.password.type === 'required' && (
             <div className="error">Password is required.</div>
           )}
         </div>
         <div>
-          <button type="submit">Submit</button>
+          <Button type="submit" className="float-right">
+            Submit
+          </Button>
         </div>
       </form>
+      <style>
+        {`.login-container{
+   max-width: 520px;
+  width: 100%;
+        }`}
+      </style>
     </Container>
   );
 };
+const mapStateToProps = (state: any) => state;
 
-export default LoginForm;
+export default connect(mapStateToProps, { saveUserAction })(LoginForm);
