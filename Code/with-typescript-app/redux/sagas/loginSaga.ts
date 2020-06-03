@@ -1,14 +1,26 @@
-import { put, call, takeEvery, all, fork } from 'redux-saga/effects';
-import { loginRequest } from '../../http/Login';
-import { saveUserAction, SessionActionType } from '../action';
+import { put, call } from 'redux-saga/effects';
+import { AuthWatcherActionType } from './watcherSaga';
 import { LoginFormProps } from '../../pages/loginForm';
+import { loginRequest } from '../../http/login';
+import { SessionActionType } from '../action';
 
-let loginPayload: LoginFormProps;
+interface LoginSaga {
+  type: AuthWatcherActionType;
+  loginPayload: LoginFormProps;
+}
 
-function* loginUser(action: SessionActionType.SAVE_USER) {
+export function* loginSaga(loginSagaPayload: LoginSaga) {
   try {
-    const user = yield call(loginRequest(loginPayload, action));
+    const { loginPayload } = loginSagaPayload;
+    const user = yield call(loginRequest, { ...loginPayload });
+    yield put({ type: SessionActionType.SAVE_USER, user, setCookie });
   } catch (error) {
     console.error(error);
   }
+}
+
+export function* logoutSaga() {
+  //API
+  yield put({ type: 'LOGOUT' });
+  console.log('Hello Sagas!');
 }

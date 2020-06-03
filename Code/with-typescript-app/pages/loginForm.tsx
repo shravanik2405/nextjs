@@ -3,14 +3,22 @@ import { Container, Form, Button } from 'react-bootstrap';
 import { loginRequest } from '../http/login';
 import { saveUserAction } from '../redux/action';
 import { connect } from 'react-redux';
+import * as Yup from 'yup';
 
 export interface LoginFormProps {
   email: string;
   password: string;
 }
+const validationSchema = Yup.object().shape({
+  email: Yup.string().required('Email is required'),
+  password: Yup.string().required('Password is required')
+});
 
 const LoginForm: React.FunctionComponent = ({ user, saveUserAction }: any) => {
-  const { register, handleSubmit, errors } = useForm<LoginFormProps>();
+  const { register, handleSubmit, errors } = useForm<LoginFormProps>({
+    mode: 'onChange',
+    validationSchema: validationSchema
+  });
   const onSubmit = async (loginFormPayload: LoginFormProps) => {
     const user = await loginRequest(loginFormPayload);
     console.log('data', user);
@@ -27,26 +35,26 @@ const LoginForm: React.FunctionComponent = ({ user, saveUserAction }: any) => {
               placeholder="Enter email"
               name="email"
               id="email"
-              ref={register({ required: true })}
+              ref={register}
             />
+            <div style={{ color: 'red' }} className="error">
+              {errors && errors.email && errors.email.message}
+            </div>
           </Form.Group>
-          {errors.email && errors.email.type === 'required' && (
-            <div className="error">Email is required.</div>
-          )}
         </div>
         <div className="field">
           <Form.Group>
             <Form.Control
-              type="password"
+              type="text"
               placeholder="Enter password"
               name="password"
               id="password"
-              ref={register({ required: true })}
+              ref={register}
             />
+            <div style={{ color: 'red' }} className="error">
+              {errors && errors.password && errors.password.message}
+            </div>
           </Form.Group>
-          {errors.password && errors.password.type === 'required' && (
-            <div className="error">Password is required.</div>
-          )}
         </div>
         <div>
           <Button type="submit" className="float-right">
