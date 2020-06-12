@@ -1,10 +1,10 @@
 import { put, call } from 'redux-saga/effects';
-import { AuthWatcherActionType } from './watcherSaga';
+import { AuthWatcherActionType } from './watcherLoginSaga';
 import { LoginFormProps } from '../../pages/loginForm';
-import { loginRequest } from '../../http/login';
+import LoginRequest from '../../http/login';
 import { SessionActionType } from '../action';
 
-interface LoginSaga {
+export interface LoginSaga {
   type: AuthWatcherActionType;
   loginPayload: LoginFormProps;
 }
@@ -12,10 +12,14 @@ interface LoginSaga {
 export function* loginSaga(loginSagaPayload: LoginSaga) {
   try {
     const { loginPayload } = loginSagaPayload;
-    const user = yield call(loginRequest, { ...loginPayload });
-    yield put({ type: SessionActionType.SAVE_USER, user, setCookie });
+    const user = yield call(LoginRequest.loginRequest, {
+      ...loginPayload
+    });
+    console.log('inside login saga', user);
+    yield put({ type: SessionActionType.LOGIN_SUCCESS, user });
   } catch (error) {
     console.error(error);
+    yield put({ type: SessionActionType.LOGIN_FAILURE });
   }
 }
 

@@ -7,6 +7,7 @@ export enum AuthWatcherActionType {
 }
 
 export function* watcherLoginSaga() {
+  console.log('inside watcher saga');
   yield takeEvery(AuthWatcherActionType.LOGIN, loginSaga);
   yield takeEvery(AuthWatcherActionType.LOGOUT, logoutSaga);
 }

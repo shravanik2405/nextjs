@@ -1,4 +1,4 @@
-import { watcherLoginSaga } from './watcherSaga';
+import { watcherLoginSaga } from './watcherLoginSaga';
 
 export function* mainSaga() {
   yield watcherLoginSaga();
