@@ -1,4 +1,4 @@
-import { takeEvery } from 'redux-saga/effects';
+import { takeLatest } from 'redux-saga/effects';
 import { loginSaga, logoutSaga } from './loginSaga';
 
 export enum AuthWatcherActionType {
@@ -8,6 +8,6 @@ export enum AuthWatcherActionType {
 
 export function* watcherLoginSaga() {
   console.log('inside watcher saga');
-  yield takeEvery(AuthWatcherActionType.LOGIN, loginSaga);
-  yield takeEvery(AuthWatcherActionType.LOGOUT, logoutSaga);
+  yield takeLatest(AuthWatcherActionType.LOGIN, loginSaga);
+  yield takeLatest(AuthWatcherActionType.LOGOUT, logoutSaga);
 }

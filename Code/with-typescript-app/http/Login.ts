@@ -8,12 +8,6 @@ export interface ILoginRequest {
   loginRequest: LoginRequestType;
 }
 
-// export const loginRequest = (loginPayload: LoginFormProps) => {
-//   return axios
-//     .post(apiBaseUrl + '/api/v1/users/login/', loginPayload)
-//     .then(value => value.data);
-// };
-
 class LoginRequest {
   static loginRequest = (loginPayload: LoginFormProps): Promise<any> => {
     console.log('loginPayload', loginPayload);

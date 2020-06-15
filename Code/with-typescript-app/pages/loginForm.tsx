@@ -1,9 +1,13 @@
 import { useForm } from 'react-hook-form';
 import { Container, Form, Button } from 'react-bootstrap';
+import Router, { useRouter } from 'next/router';
 import { loginAction } from '../redux/action';
 import { connect, useSelector, useDispatch } from 'react-redux';
+import { useCookies } from 'react-cookie';
 import * as Yup from 'yup';
 import { SessionState } from '../redux/reducers/session';
+import { USER_COOKIE_KEY } from '../redux/constants';
+import { useEffect } from 'react';
 
 export interface LoginFormProps {
   email: string;
@@ -16,16 +20,24 @@ const validationSchema = Yup.object().shape({
 
 const LoginForm: React.FunctionComponent = ({ loginAction }: any) => {
   const user = useSelector((state: SessionState) => state.user);
+  const [cookies, setCookie] = useCookies([USER_COOKIE_KEY]);
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const { register, handleSubmit, errors } = useForm<LoginFormProps>({
     mode: 'onChange',
     validationSchema: validationSchema
   });
 
+  useEffect(() => {
+    if (user) {
+      router.push('/profile');
+    }
+  }, [user]);
+
   const onSubmit = async (loginFormPayload: LoginFormProps) => {
-    dispatch(loginAction(loginFormPayload));
-    console.log('data');
+    console.log('data', user);
+    dispatch(loginAction(loginFormPayload, setCookie));
   };
 
   return (
