@@ -11,7 +11,7 @@
     "@types/react-redux": "^7.1.9",
     "@types/redux-logger": "^3.0.8",
     "@types/yup": "^0.29.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.0",
     "bootstrap-next": "^1.0.5",
     "next": "latest",
